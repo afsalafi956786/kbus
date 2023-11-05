@@ -7,10 +7,10 @@ export async function  userRegister (req,res,next){
     try{
 
         const {name,phone} = req.body;
-        if(!name){
+        if(!name){   
             return res.status(404).json({message:'Please eneter your name!'}) 
         }
-
+      //origng
         if(!phone){
             return res.status(404).json({message:'Please eneter phone number!'}) 
         }

@@ -1,5 +1,4 @@
 import USER from '../../model/user/user.js'
-import { generateOTP,sendOTP } from '../../service/Textlocal.js';
 import OTP from '../../model/OTP.js';
 import jwt from 'jsonwebtoken';
 

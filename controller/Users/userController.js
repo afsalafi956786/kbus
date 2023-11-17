@@ -1,5 +1,4 @@
 import USER from '../../model/user/user.js'
-import OTP from '../../model/OTP.js';
 import jwt from 'jsonwebtoken';
 
 export async function  userRegister (req,res,next){
@@ -19,17 +18,7 @@ export async function  userRegister (req,res,next){
             return res.status(400).json({ message: 'This phone number has been already registered!' }); 
         }
         
-        const otp = generateOTP();
 
-         // Set the OTP expiration to 5 minutes from now
-         const expiration = new Date(Date.now() + 5 * 60 * 1000);
-
-         // Save the OTP to the database
-         const otpEntry = new OTP({ phone, otp, expiration });
-         await otpEntry.save();
- 
-         // Send the OTP to the user (e.g., via SMS or email)
-          sendOTP(phone, otp);
 
           const user = new USER({
             name,
@@ -57,13 +46,7 @@ export async function userVerifyOTP (req,res,next){
             return res.status(404).json({ message:'Please enter the otp!'})
         }
 
-         // Step 1: Find the latest OTP data from the temporary collection
-         const latestOTP = await OTP.findOne({ phone,otp }).sort({ createdAt: -1 }); 
-        
-         // Step 2: Verify the OTP
-         if (!latestOTP || latestOTP.otp !== otp || Date.now() > latestOTP.expiration) {
-          return res.status(400).json({ message: 'Invalid OTP' });
-          }     
+     
           
           const user = new USER({
             name,
@@ -97,18 +80,7 @@ export async function userLogin (req,res,next){
             return res.status(401).json({ message:'Phone number is not registered!'})
         }
 
-        const otp = generateOTP();
 
-           // Set the OTP expiration to 5 minutes from now
-           const expiration = new Date(Date.now() + 5 * 60 * 1000); 
-
-           // Save the OTP to the database
-          // expiration
-         const otpEntry = new OTP({ phone, otp, expiration }); // Include the expiration field
-         await otpEntry.save();
-  
-         // Send the OTP to the user (e.g., via SMS or email)
-          sendOTP(phone, otp,expiration); 
 
           return res.status(200).json({ message:'OTP Sent Sucessfully',user})
 
@@ -125,15 +97,7 @@ export async function userLoginVerify (req,res,next){
         if(!otp){
             return res.status(404).json({ message:'Please enter the otp!'})
         }
-
-         // Step 1: Find the latest OTP data from the temporary collection
-         const latestOTP = await OTP.findOne({ phone,otp }).sort({ createdAt: -1 }); 
         
-         // Step 2: Verify the OTP
-         if (!latestOTP || latestOTP.otp !== otp || Date.now() > latestOTP.expiration) {
-         return res.status(400).json({ message: 'Invalid OTP' });
-        }
-         
         const user = await USER.findOne({phone});
 
         const token = jwt.sign({userId:user._id,name:user.name,phone:user.phone},

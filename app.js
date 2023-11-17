@@ -21,7 +21,7 @@ app.use(cors());
 
 //Routes
 app.use('/api/owner',ownerRoter);
-app.use('/api/user',userRouter)
+app.use('/api/user',userRouter);
 
 
 

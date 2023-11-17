@@ -1,8 +1,7 @@
 import OWNER from '../../model/owner/owner.js'
-import OTP from '../../model/OTP.js'
 import jwt from 'jsonwebtoken'
 
-export async function ownerRegister(req,res,next){
+export async function RegisterCheck(req,res,next){
     try{
         const { name,phone } = req.body;
         
@@ -23,23 +22,30 @@ export async function ownerRegister(req,res,next){
             phone
          });
 
-         return res.status(200).json({ message:'OTP Sent Sucessfully',owner})
+         return res.status(200).json({ message:'success',owner})
 
     }catch(error){
         next(error);
     }
 }
 
-export async function verifyOTP (req,res,next){
+export async function RegisterOwner (req,res,next){
     try{
 
-       const obj = req.body
+       const {otp,name,phone} = req.body
 
-        let otp = obj.otp;
-        let phone = obj.phone;
-        let name = obj.name;
+        // let otp = obj.otp;
+        // let phone = obj.phone;
+        // let name = obj.name;
         if(!otp){
             return res.status(404).json({ message:'Please enter the otp!'})
+        }
+
+        if(!name){
+            return res.status(404).json({ message:'Name not found!'})
+        }
+        if(!phone){
+            return res.status(404).json({ message:'phone not found!'})
         }
 
          const owner =  new OWNER({
@@ -60,7 +66,7 @@ export async function verifyOTP (req,res,next){
 }
 
 
-export async function ownerLogin (req,res,next){
+export async function loginCheck (req,res,next){
     try{
         const {phone} = req.body;
 
@@ -72,7 +78,7 @@ export async function ownerLogin (req,res,next){
         if(!owner){
             return res.status(401).json({ message: 'Phone number is not registered!' });
         }
-        return res.status(200).json({ message:'OTP Sent Sucessfully',owner})
+        return res.status(200).json({ message:'success',owner})
 
 
     }catch(error){
@@ -81,7 +87,7 @@ export async function ownerLogin (req,res,next){
 }
 
 
-export async function verifyLoginOTP (req,res,next){
+export async function ownerLogin (req,res,next){
     try{
         const {phone,otp } =req.body;
 
@@ -90,7 +96,7 @@ export async function verifyLoginOTP (req,res,next){
         }
 
          const owner = await OWNER.findOne({ phone });
-         
+              
          const token = jwt.sign(
             { userId: owner._id, name: owner.name, phone: owner.phone },
             process.env.JWT_SECRET,

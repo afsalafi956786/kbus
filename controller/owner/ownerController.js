@@ -33,15 +33,7 @@ export async function RegisterCheck(req,res,next){
 export async function RegisterOwner (req,res,next){
     try{
 
-       const {otp,name,phone} = req.body
-
-        // let otp = obj.otp;
-        // let phone = obj.phone;
-        // let name = obj.name;
-        if(!otp){
-            return res.status(404).json({ message:'Please enter the otp!'})
-        }
-
+       const {name,phone} = req.body
         if(!name){
             return res.status(404).json({ message:'Name not found!'})
         }
@@ -90,18 +82,14 @@ export async function loginCheck (req,res,next){
 
 export async function ownerLogin (req,res,next){
     try{
-        const {phone,otp } =req.body;
-
-        if(!otp){
-            return res.status(404).json({ message:'Please enter the otp!'})
-        }
-
+        const {phone } =req.body;
+        
          const owner = await OWNER.findOne({ phone });
               
          const token = jwt.sign(
             { userId: owner._id, name: owner.name, phone: owner.phone },
             process.env.JWT_SECRET,
-            { expiresIn: '6M' }
+            { expiresIn: '1y' }
           );
 
           return res.status(200).json({ message:'Login successful',token,owner})

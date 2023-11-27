@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 export async function RegisterCheck(req,res,next){
     try{
         const { name,phone } = req.body;
+        console.log(req.body)
         
         if(!name){
             return res.status(404).json({message:'Please eneter your name!'})
@@ -56,7 +57,7 @@ export async function RegisterOwner (req,res,next){
          const token = jwt.sign(
             { userId: owner._id, name: owner.name, phone: owner.phone },
             process.env.JWT_SECRET,
-            { expiresIn: '6M' }
+            { expiresIn: '1y' }
           );
 
           return res.status(200).json({ message:'Registration completed successfully',token,owner})

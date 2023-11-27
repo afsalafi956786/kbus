@@ -16,7 +16,8 @@ connectDb(data_connection);
 
 
 //middle ware 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(cors());
 
 //Routes
@@ -33,11 +34,6 @@ app.use((err,req,res,next)=>{
     console.log(err.message);
     return res.status(500).json({ message:'Internal server error'})
 })
-
-
-
-
-
 
 
 app.listen(PORT,()=>{

@@ -7,6 +7,7 @@ import cors from 'cors';
 import ownerRoter from './Routes/ownerRouter.js'
 import bodyParser from 'body-parser';
 import userRouter from './Routes/userRouter.js'
+import adminRouter from './Routes/adminRouter.js'
 
 
 
@@ -23,6 +24,7 @@ app.use(cors());
 //Routes
 app.use('/api/owner',ownerRoter);
 app.use('/api/user',userRouter);
+app.use('/api/admin',adminRouter)
 
 
 

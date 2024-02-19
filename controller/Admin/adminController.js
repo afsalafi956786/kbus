@@ -1,5 +1,6 @@
 import ADMIN from '../../model/Admin/admin.js'
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken'
 
 export const createAdmin = async (req,res,next)=>{
     try{
@@ -25,6 +26,7 @@ export const createAdmin = async (req,res,next)=>{
   export async function AdminLogin (req,res,next){
     try{
         const { email ,password }= req.body;
+
         
         if(!email){
             return res.status(404).json({ message: 'email required' });
@@ -57,4 +59,24 @@ export const createAdmin = async (req,res,next)=>{
     }
   }
 
+
+  export async function AdminDetails (req,res,next){
+    try{
+
+      const adminId = req.userId;
+      const admin = await ADMIN.findById( adminId );
+
+      if(!admin){
+        return res.json(null)
+      }
+      return res.status(200).json({ admin });
+
+    }catch(error){
+      next(error);
+    }
+
+  }
   
+
+
+

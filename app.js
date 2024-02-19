@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 import connectDb from './connection/dbConnect.js';
 import cors from 'cors';
-import ownerRoter from './Routes/ownerRouter.js'
 import bodyParser from 'body-parser';
 import userRouter from './Routes/userRouter.js'
 import adminRouter from './Routes/adminRouter.js'
@@ -19,10 +18,14 @@ connectDb(data_connection);
 //middle ware 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(
+    cors({
+      credentials: true,
+      origin: "http://localhost:5173",
+    })
+  );
 
 //Routes
-app.use('/api/owner',ownerRoter);
 app.use('/api/user',userRouter);
 app.use('/api/admin',adminRouter)
 

@@ -69,11 +69,18 @@ export const createAdmin = async (req,res,next)=>{
       if(!admin){
         return res.json(null)
       }
+      
       return res.status(200).json({ admin });
 
     }catch(error){
       next(error);
     }
+
+  }
+
+   function newOne(){
+    const less = 1;
+    const main = 2;
 
   }
   

@@ -77,12 +77,6 @@ export const createAdmin = async (req,res,next)=>{
     }
 
   }
-
-   function newOne(){
-    const less = 1;
-    const main = 2;
-
-  }
   
 
 

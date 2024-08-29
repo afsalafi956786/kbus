@@ -11,6 +11,7 @@ export async function verifyToken (req,res,next){
         }
 
         const decode = jwt.verify(token,process.env.JWT_SECRET);
+        console.log(decode,'decode')
         req.userId = decode.userId;
 
         next();

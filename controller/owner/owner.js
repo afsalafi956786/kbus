@@ -68,6 +68,7 @@ export async function ownerLogin (req,res){
 export async function ownerforgotPassoword(req,res){
     try{
         const { email } = req.body;
+        //done
         if (!email) {
           return res.status(400).json({ message: 'Please enter your email' });
         }

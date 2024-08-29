@@ -2,7 +2,7 @@ import express from 'express';
 const router= express.Router();
 import { verifyToken } from '../middleware/auth.js'
 import { ownerRegister,ownerLogin,ownerforgotPassoword }  from '../controller/owner/owner.js';
-import { ownerStartBus,addBusDetails,addRootes,getOneBusdetails}  from '../controller/owner/bus.js'
+import { ownerStartBus,addBusDetails,addRootes,getOneBusdetails,getOwnerbuses}  from '../controller/owner/bus.js'
 
 
 
@@ -19,5 +19,6 @@ router.post('/add-bus',verifyToken,addBusDetails);
 router.post('/add-root/:busId',verifyToken,addRootes);
 
 //get bus
-router.get('/get-bus/:busId',getOneBusdetails)
+router.get('/get-bus/:busId',getOneBusdetails);
+router.get('/get-bus',verifyToken,getOwnerbuses)
 export default router;

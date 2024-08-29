@@ -189,3 +189,24 @@ export async function addBusDetails (req,res,next){
         next(error);
     }
   }
+
+  export async function getOwnerbuses (req,res,next){
+    try{
+        const ownerId = req.userId;
+
+        const owner = await OWNER.findOne({ _id:ownerId  });
+        if(!owner){
+            return res.status(404).json({ message:'User not found!'})
+        }
+
+        const buses = await BUS.find({ ownerId:ownerId }).sort({ createdAt: -1});
+        if(!buses){
+            return res.status(404).json({ message:'Bus not found!' })
+        }
+
+        return res.status(200).json({ buses })
+
+    }catch(error){
+        next(error);
+    }
+  }

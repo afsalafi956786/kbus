@@ -135,7 +135,7 @@ export async function addBusDetails (req,res,next){
         if(!owner){
             return res.status(404).json({ message:'User not found!'})
         }
-
+//working
         if(!from){
             return res.status(400).json({ message: 'Please specify the departure location (from).' });
         }

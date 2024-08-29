@@ -5,7 +5,8 @@ dotenv.config();
 import connectDb from './connection/dbConnect.js';
 import bodyParser from 'body-parser';
 import userRouter from './Routes/userRouter.js'
-import adminRouter from './Routes/adminRouter.js'
+import adminRouter from './Routes/adminRouter.js';
+import ownerRouter from './Routes/ownerRouter.js';
 
 
 
@@ -21,7 +22,8 @@ app.use(bodyParser.json());
 
 //Routes
 app.use('/api/user',userRouter);
-app.use('/api/admin',adminRouter)
+app.use('/api/admin',adminRouter);
+app.use('/api/owner',ownerRouter)
 
 
 app.post('/parsedata',(req,res)=>{
@@ -35,9 +37,6 @@ app.post('/parsedata',(req,res)=>{
 
   res.status(200).json({ message: 'GPS data received successfully' });
 })
-
-
-
 
 
 

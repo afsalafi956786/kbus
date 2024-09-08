@@ -64,7 +64,7 @@ export async function ownerLogin (req,res){
         next(error);
     }
 }
-
+//working
 export async function ownerforgotPassoword(req,res){
     try{
         const { email } = req.body;

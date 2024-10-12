@@ -9,6 +9,14 @@ const routeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    startTime:{
+        type:String,
+        required:true
+    },
+    reachTime:{
+        type:String,
+        required:true
+    },
     busStops: [{
         name: {
             type: String,

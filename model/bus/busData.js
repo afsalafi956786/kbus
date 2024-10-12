@@ -45,21 +45,6 @@ const busDetailsSchema = new mongoose.Schema({
         required:true
     },
     rootes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'root' }],
-    // currentLocation: {
-    //     type: {
-    //         type: String,
-    //         enum: ['Point'], // Ensures only Point type is accepted
-    //         default: 'Point'
-    //     },
-    //     coordinates: {
-    //         type: [Number], // Longitude and latitude
-    //         default: [0, 0] // Default coordinates
-    //     }
-    // },
-    // lastUpdated: {
-    //     type: Date,
-    //     default: Date.now
-    // }
 
 },{
     timestamps:true

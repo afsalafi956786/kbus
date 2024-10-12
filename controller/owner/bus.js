@@ -82,6 +82,7 @@ export async function addBusDetails (req,res,next){
             return res.status(400).json({ message:'This bus number already added!'})
         }
 
+
         const existBusData = await BUS.findOne({
             busName: busName,
             busNumber: busNumber,
@@ -127,7 +128,7 @@ export async function addBusDetails (req,res,next){
     try{
 
         const { busId } = req.params;
-        const { from , to , busStops } = req.body;
+        const { from , to ,startTime,reachTime, busStops } = req.body;
 
         const ownerId = req.userId;
        console.log(ownerId,'owener')
@@ -135,7 +136,6 @@ export async function addBusDetails (req,res,next){
         if(!owner){
             return res.status(404).json({ message:'User not found!'})
         }
-//working
         if(!from){
             return res.status(400).json({ message: 'Please specify the departure location (from).' });
         }
@@ -144,7 +144,14 @@ export async function addBusDetails (req,res,next){
             return res.status(400).json({ message: 'Please specify the destination location (to).' });
         }
 
-       const  existRoute= await ROOTES.findOne({ from : from, to: to, busStops: busStops});
+        if(!startTime){
+            return res.status(400).json({ message: 'Please specify the starting time' });
+        }
+        if(!reachTime){
+            return res.status(400).json({ message: 'Please specify the reaching time' });
+        }
+
+    //    const  existRoute= await ROOTES.findOne({ from : from, to: to, busStops: busStops});
 
         // if (existRoute) {
         //     return res.status(400).json({ message: 'This route already exists' });
@@ -159,6 +166,8 @@ export async function addBusDetails (req,res,next){
         const root = await ROOTES.create({
             from: from,
             to: to,
+            startTime,
+            reachTime,
             busStops: busStops
         });
 
@@ -209,4 +218,52 @@ export async function addBusDetails (req,res,next){
     }catch(error){
         next(error);
     }
+  }
+
+
+  export async function getRooteParticularBus(req,res,next){
+    try{
+        const { busId } = req.params;
+        const ownerId = req.userId;
+
+        const owner = await OWNER.findOne({ _id:ownerId  });
+        if(!owner){
+            return res.status(404).json({ message:'User not found!'})
+        }
+        const busWithRoutes = await BUS.aggregate([
+            {
+                $match: { busId, ownerId } 
+            },
+            {
+                $lookup: {
+                    from: 'roots', 
+                    localField: 'rootes', 
+                    foreignField: '_id', 
+                    as: 'routes' 
+                }
+            },
+            {
+                $project: {
+                    _id: 0, 
+                    busId: 1,
+                    busName: 1,
+                    busNumber: 1,
+                    routes: 1 
+                }
+            }
+        ]);
+
+        if (busWithRoutes.length === 0) {
+            return res.status(404).json({ message: 'Bus not found' });
+        }
+
+        // Return the bus and its routes
+        return res.status(200).json({
+            bus: busWithRoutes[0] // Return the first result since we're matching by busId
+        });
+
+    }catch(error){
+        next(error);
+    }
+
   }

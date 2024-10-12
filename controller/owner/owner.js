@@ -7,22 +7,34 @@ import nodeMailer from 'nodemailer';
 export async function ownerRegister(req,res,next){
     try{
 
-        const { email , password } = req.body;
-        if(!email){
-            return res.status(400).json({message:'Please enter the email'})
+        const { emailOrPhone , password } = req.body;
+        if(!emailOrPhone){
+            return res.status(400).json({message:'Please enter the email or phone number'})
         }
 
         if(!password){
             return res.status(400).json({ message:'Please enter the password'})
         }
 
-        const existEmail = await OWNER.findOne({ email });
-        if(existEmail){
-            return res.status(400).json({ message:'Email already exist. please login'});
+        let searchCriteria = {};
+
+        if(/^\S+@\S+\.\S+$/.test(emailOrPhone)){
+          searchCriteria.email = emailOrPhone;
+        }else if(/^\d{10}$/.test(emailOrPhone)){
+          searchCriteria.phone = emailOrPhone;
+        }else{
+          return res.status(400).json({ message: 'Please enter a valid email or phone number' });
         }
 
+        const existOwner = await OWNER.findOne(searchCriteria);
+        if (existOwner) {
+            return res.status(400).json({ message: 'Account already exists. Please login.' });
+        }
+
+
        const owner =  await OWNER.create({ 
-            email,
+        email: searchCriteria.email || null,
+        phone: searchCriteria.phone || null,
             password,
         });
 
@@ -38,16 +50,27 @@ export async function ownerRegister(req,res,next){
 export async function ownerLogin (req,res){
     try{
 
-        const { email, password } = req.body;
-        if(!email){
-            return res.status(400).json({message:'Please enter the email'})
+        const { emailOrPhone, password } = req.body;
+        if(!emailOrPhone){
+            return res.status(400).json({message:'Please enter email or phone number'})
         }
 
         if(!password){
             return res.status(400).json({ message:'Please enter the password'})
         }
 
-        const owner = await OWNER.findOne({ email });
+        let searchCriteria = {};
+
+        if(/^\S+@\S+\.\S+$/.test(emailOrPhone)){
+          searchCriteria.email = emailOrPhone;
+        }else if(/^\d{10}$/.test(emailOrPhone)){
+          searchCriteria.phone = emailOrPhone;
+        }else{
+          return res.status(400).json({ message: 'Please enter a valid email or phone number' });
+        }
+
+
+        const owner = await OWNER.findOne( searchCriteria);
         if(!owner){
             return res.status(404).json( { message:'User not exist!'})
         }
@@ -119,7 +142,7 @@ export async function ownerforgotPassoword(req,res){
       transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
           console.log(err.message);
-          return res.status(500).send({ message: "Error sending email" });
+          return res.status(500).json({ message: "Error sending email" });
         } else {
           console.log('Email sent successfully');
           return res.status(200).json({ message: "Password sent to your registration email successfully" });

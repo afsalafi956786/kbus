@@ -4,7 +4,9 @@ import mongoose from "mongoose";
 const ownerSchema = new mongoose.Schema({
     email:{
         type:String,
-        required:true,
+    },
+    phone:{
+        type:Number,
     },
     password:{
         type:String,

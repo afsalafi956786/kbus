@@ -2,6 +2,7 @@ import OWNER from '../../model/owner/owner.js';
 import BUS from '../../model/bus/busData.js';
 import ROOTES from '../../model/bus/rootSchema.js';
 import crypto from 'crypto';
+import ADMInNOTIFICATION from '../../model/Admin/ad-notification.js'
 
 
 
@@ -112,9 +113,17 @@ export async function addBusDetails (req,res,next){
             ownerMobile: ownerPhone,
             assistendPhone: assistentPhone,
         });
-        
-        console.log(busDetails);
-        return res.status(200).json({ message:'Route added successfully.', busDetails})
+
+
+        const notificationData = {
+            busId:busDetails.busId,
+            message: `${busDetails.busName} added successfully just check the approvel`,
+            status:'Pending',
+            notificationType:'addBus',
+        }
+
+        await ADMInNOTIFICATION.create(notificationData);
+        return res.status(200).json({ message:'Bus added successfully.', busDetails})
 
     }catch(error){
       next(error);

@@ -5,6 +5,7 @@ dotenv.config();
 import connectDb from './connection/dbConnect.js';
 import bodyParser from 'body-parser';
 import userRouter from './Routes/userRouter.js'
+import cors from 'cors';
 import adminRouter from './Routes/adminRouter.js';
 import ownerRouter from './Routes/ownerRouter.js';
 
@@ -13,6 +14,8 @@ import ownerRouter from './Routes/ownerRouter.js';
 const PORT = process.env.PORT;
 const data_connection = process.env.DATA_BASE_CONNECTION;
 connectDb(data_connection);
+
+app.use(cors());
 
 
 //middle ware 

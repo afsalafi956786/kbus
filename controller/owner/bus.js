@@ -37,6 +37,8 @@ export async function ownerStartBus (req,res){
 export async function addBusDetails (req,res,next){
     try{
         const { busName,busNumber,busColor,busType,ownerName,ownerPhone,assistentPhone} = req.body;
+        console.log(busName,'busname')
+        console.log( busName,busNumber,busColor,busType,ownerName,ownerPhone,assistentPhone,'data')
 
         const ownerId =  req.userId ;
         console.log(ownerId,'owner id')
